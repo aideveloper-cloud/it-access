@@ -1,26 +1,202 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-canvas: #f4f5f7;
+  --color-surface: #ffffff;
+  --color-surface-muted: #eef0f3;
+  --color-ink: #0b0d10;
+  --color-ink-muted: #5c6570;
+  --color-ink-subtle: #8b939e;
+  --color-hairline: #e2e5ea;
+  --color-hairline-strong: #c8ced6;
+  --color-accent: #0f6b5c;
+  --color-accent-hover: #0c5649;
+  --color-accent-soft: #e6f4f1;
+  --color-sidebar: #0b0d10;
+  --color-sidebar-ink: #f4f5f7;
+  --color-sidebar-muted: #8b939e;
+  --color-success: #1b7f4a;
+  --color-warning: #b45309;
+  --color-danger: #b42318;
+  --color-info: #1d4ed8;
+
+  /* legacy aliases */
+  --color-navy-50: #e6f4f1;
+  --color-navy-600: #0f6b5c;
+  --color-navy-700: #0c5649;
+  --color-navy-800: #0b0d10;
+  --color-navy-900: #0b0d10;
+
+  --font-sans: var(--font-ui), var(--font-thai), "Noto Sans Thai", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-code), ui-monospace, monospace;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  body {
+    font-family: var(--font-sans);
+    background: var(--color-canvas);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  ::selection {
+    background: color-mix(in srgb, var(--color-accent) 22%, white);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .card {
+    border-radius: 12px;
+    border: 1px solid var(--color-hairline);
+    background: var(--color-surface);
+    box-shadow: 0 1px 2px rgba(11, 13, 16, 0.04);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    border-radius: 8px;
+    padding: 0.5rem 0.875rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.2;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  .btn-primary {
+    background: var(--color-accent);
+    color: #fff;
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: var(--color-accent-hover);
+  }
+
+  .btn-secondary {
+    background: var(--color-surface);
+    color: var(--color-ink);
+    border: 1px solid var(--color-hairline-strong);
+  }
+  .btn-secondary:hover:not(:disabled) {
+    background: var(--color-surface-muted);
+  }
+
+  .btn-danger {
+    background: var(--color-surface);
+    color: var(--color-danger);
+    border: 1px solid color-mix(in srgb, var(--color-danger) 35%, white);
+  }
+  .btn-danger:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--color-danger) 8%, white);
+  }
+
+  .input {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid var(--color-hairline-strong);
+    background: var(--color-surface);
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    color: var(--color-ink);
+    outline: none;
+  }
+  .input:focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 18%, transparent);
+  }
+
+  .label {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-ink-muted);
+  }
+
+  .page-title {
+    font-size: 1.375rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+  }
+
+  .section-title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--color-ink);
+  }
+
+  .badge {
+    display: inline-block;
+    white-space: nowrap;
+    border-radius: 9999px;
+    padding: 0.15rem 0.625rem;
+    font-size: 0.6875rem;
+    font-weight: 500;
+  }
+
+  .code-chip {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+}
+
+@media print {
+  body {
+    background: white !important;
+  }
+  body * {
+    visibility: hidden;
+  }
+  .label-print-root,
+  .label-print-root * {
+    visibility: visible;
+  }
+  .label-print-root {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 0 !important;
+  }
+  .label-card {
+    width: 40mm;
+    height: 22mm;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .label-card-skip {
+    display: none !important;
+  }
+  @page {
+    size: A4;
+    margin: 8mm;
+  }
+  .checklist-print-root,
+  .checklist-print-root * {
+    visibility: visible;
+  }
+  .checklist-print-root {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 0 !important;
+  }
+  .checklist-sheet {
+    box-shadow: none !important;
+    border: none !important;
+  }
+  .checklist-table input {
+    border: none !important;
+  }
 }
